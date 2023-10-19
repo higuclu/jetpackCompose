@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">BOOTCAMP</string>
+    <string name="button_login">LOGIN</string>
+    <string name="label_username">Username</string>
+    <string name="label_password">Password</string>
+    <string name="snackbar_text_success">Login Successful</string>
+    <string name="snackbar_text_fail">Login Failed</string>
+    <string name="snackbar_text_missing_field">Username and password can not be empty</string>
+</resources>

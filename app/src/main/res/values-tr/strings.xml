@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BOOTCAMP</string>
+    <string name="button_login">GİRİŞ</string>
+    <string name="label_username">Kullanıcı Adı</string>
+    <string name="snackbar_text_success">Giriş Başarılı</string>
+    <string name="snackbar_text_fail">Hatalı Giriş</string>
+    <string name="snackbar_text_missing_field">Kullanıcı Adı ve Şifre Boş Bırakılamaz</string>
+    <string name="label_password">Şifre</string>
+</resources>
