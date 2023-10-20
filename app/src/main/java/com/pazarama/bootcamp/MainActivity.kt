@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -36,17 +37,15 @@ import kotlinx.coroutines.delay
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val userName = "admin"
-        val password = "123"
         setContent {
-            GUI(userName, password)
+            GUI()
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GUI(userName : String, passWord : String) {
+fun GUI() {
     var username by remember { mutableStateOf(TextFieldValue()) }
     var password by remember { mutableStateOf(TextFieldValue()) }
     var snackbarVisible by remember { mutableStateOf(false) }
@@ -54,6 +53,21 @@ fun GUI(userName : String, passWord : String) {
     val successMessage = stringResource(id = R.string.snackbar_text_success)
     val failMessage = stringResource(id = R.string.snackbar_text_fail)
     val missingMessage = stringResource(id = R.string.snackbar_text_missing_field)
+
+    val authenticationManager = AuthenticationManager(
+        onSuccess = {
+            snackbarText = successMessage
+            snackbarVisible = true
+        },
+        onFailure = {
+            snackbarText = failMessage
+            snackbarVisible = true
+        },
+        onMissing = {
+            snackbarText = missingMessage
+            snackbarVisible = true
+        }
+    )
 
     LaunchedEffect(snackbarVisible) {
         if (snackbarVisible) {
@@ -82,7 +96,8 @@ fun GUI(userName : String, passWord : String) {
             label = { Text(stringResource(id = R.string.label_username)) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(8.dp)
+                .testTag("usernameField"),
         )
 
         TextField(
@@ -92,24 +107,18 @@ fun GUI(userName : String, passWord : String) {
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(8.dp)
+                .testTag("passwordField"),
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = {
-                if (username.text.isNotEmpty() && password.text.isNotEmpty()) {
-                    if (username.text == userName && password.text == passWord) {
-                        snackbarText = successMessage
-                    } else {
-                        snackbarText = failMessage
-                    }
-                } else {
-                    snackbarText = missingMessage
-                }
-                snackbarVisible = true
+                authenticationManager.performAuthentication(username.text, password.text)
             },
+            modifier = Modifier
+                .testTag("loginButton")
         ) {
             Text(stringResource(id = R.string.button_login))
         }
@@ -129,5 +138,5 @@ fun GUI(userName : String, passWord : String) {
 @Preview(showBackground = true)
 @Composable
 fun Preview() {
-    GUI(userName = "admin", passWord = "123")
+    GUI()
 }
